@@ -236,7 +236,7 @@ export default function AdminUsersPage() {
                                         type="email"
                                         required
                                         className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:outline-none transition-all"
-                                        placeholder="admin@maxryd.com"
+                                        placeholder="admin@shipryd.com"
                                         value={formData.email}
                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     />
