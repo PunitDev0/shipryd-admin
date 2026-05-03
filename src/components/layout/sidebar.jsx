@@ -73,7 +73,7 @@ export function Sidebar() {
       {/* Logo */}
       <div className="p-6 border-b border-sidebar-border">
         <h1 className="text-2xl font-bold tracking-tight">
-          <span className="text-sidebar-primary">Maxryd</span>
+          <span className="text-sidebar-primary">ShipRyd</span>
           <div className="text-xs font-semibold tracking-wider text-sidebar-foreground/60">
             electric
           </div>
