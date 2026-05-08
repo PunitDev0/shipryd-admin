@@ -4,17 +4,10 @@ import React, { useState, useEffect, useCallback } from 'react'
 import {
     Search,
     RotateCcw,
-    CreditCard,
-    CheckCircle2,
-    Clock,
     XCircle,
     Loader2,
-    ChevronRight,
-    Eye,
-    IndianRupee,
-    Calendar,
+    Download,
     Filter,
-    Download
 } from 'lucide-react'
 import { BASE_URL } from '@/lib/baseUrl'
 import { exportToExcel } from '@/lib/exportUtils'
@@ -28,6 +21,7 @@ export default function PaymentsPageContent() {
     const [statusFilter, setStatusFilter] = useState('all')
     const [startDate, setStartDate] = useState('')
     const [endDate, setEndDate] = useState('')
+    const [isSyncing, setIsSyncing] = useState(null)
 
     // Debounce search query
     useEffect(() => {
@@ -49,7 +43,6 @@ export default function PaymentsPageContent() {
         }));
         exportToExcel(exportData, 'Payment_History_Report');
     };
-    const [isSyncing, setIsSyncing] = useState(null)
 
     const handleSync = async (subscriptionId) => {
         setIsSyncing(subscriptionId)
@@ -85,13 +78,8 @@ export default function PaymentsPageContent() {
                 url += `&search=${encodeURIComponent(debouncedSearch)}`
             }
             
-            // Date Range Filtering
-            if (startDate) {
-                url += `&startDate=${startDate}`
-            }
-            if (endDate) {
-                url += `&endDate=${endDate}`
-            }
+            if (startDate) url += `&startDate=${startDate}`
+            if (endDate) url += `&endDate=${endDate}`
 
             const response = await fetch(url, {
                 headers: {
@@ -118,118 +106,103 @@ export default function PaymentsPageContent() {
     }, [fetchSubscriptions])
 
     const getStatusBadge = (status) => {
+        const baseClass = "px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded border"
         switch (status) {
             case 'active':
-                return (
-                    <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700 rounded border border-green-200">
-                        Active
-                    </span>
-                )
+                return <span className={`${baseClass} bg-green-50 text-green-700 border-green-100`}>Active</span>
             case 'expired':
-                return (
-                    <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-700 rounded border border-gray-200">
-                        Expired
-                    </span>
-                )
+                return <span className={`${baseClass} bg-gray-50 text-gray-700 border-gray-100`}>Expired</span>
             case 'pending':
-                return (
-                    <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700 rounded border border-amber-200">
-                        Pending
-                    </span>
-                )
+                return <span className={`${baseClass} bg-amber-50 text-amber-700 border-amber-100`}>Pending</span>
             case 'failed':
-                return (
-                    <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-red-100 text-red-700 rounded border border-red-200">
-                        Failed
-                    </span>
-                )
+                return <span className={`${baseClass} bg-red-50 text-red-700 border-red-100`}>Failed</span>
             case 'cancelled':
-                return (
-                    <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-zinc-100 text-zinc-700 rounded border border-zinc-200">
-                        Cancelled
-                    </span>
-                )
+                return <span className={`${baseClass} bg-zinc-50 text-zinc-700 border-zinc-100`}>Cancelled</span>
             default:
-                return (
-                    <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-gray-50 text-gray-500 rounded border border-gray-100">
-                        {status}
-                    </span>
-                )
+                return <span className={`${baseClass} bg-gray-50 text-gray-500 border-gray-100`}>{status}</span>
         }
     }
 
-    // Note: Search, status, and expiry filters are now handled entirely by the backend
-
     return (
-        <div className="min-h-screen p-2 bg-white">
+        <div className="flex flex-col h-full bg-white">
             {/* Header */}
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <div>
-                    <h1 className="text-3xl font-semibold">Payment History</h1>
-                    <p className="text-gray-500 text-sm">
-                        Monitor all subscription transactions and payment statuses
-                    </p>
+                    <h1 className="text-2xl md:text-3xl font-semibold text-zinc-900">Payment History</h1>
+                    <p className="text-gray-500 text-sm">Monitor subscription transactions</p>
+                </div>
+                <div className="flex gap-4">
+                    <button 
+                        onClick={handleExport}
+                        className="flex items-center gap-2 bg-black text-white px-4 py-2 text-xs font-bold rounded hover:bg-zinc-800 transition-colors shadow-sm"
+                    >
+                        <Download size={14} /> Export Report
+                    </button>
                 </div>
             </div>
 
-            {/* Search & Actions */}
-            <div className="flex justify-between items-center mb-4">
-                <div className="flex gap-3 items-center">
-                    <div className="relative w-80">
-                        <Search
-                            size={16}
-                            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                        />
+            {/* Filters Section */}
+            <div className="flex flex-col gap-4 mb-6">
+                <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
+                    <div className="relative flex-1 lg:max-w-md">
+                        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
-                            placeholder="Search by Driver, Phone or Transaction ID"
+                            placeholder="Search Driver, Phone or Transaction..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full border border-gray-300 pl-9 pr-3 py-2 text-sm focus:outline-none focus:border-black rounded"
+                            className="w-full border border-gray-300 pl-9 pr-3 py-2 text-sm focus:outline-none focus:border-black rounded transition-colors"
                         />
                     </div>
 
-                    <div className="relative">
-                        <select
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                            className="appearance-none border border-gray-300 pl-3 pr-8 py-2 text-sm focus:outline-none focus:border-black rounded bg-white w-40 cursor-pointer text-gray-700"
-                        >
-                            <option value="all">All Status</option>
-                            <option value="active">Active</option>
-                            <option value="expired">Expired</option>
-                            <option value="pending">Pending</option>
-                            <option value="failed">Failed</option>
-                            <option value="cancelled">Cancelled</option>
-                        </select>
-                        <Filter size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                    <div className="flex flex-col sm:flex-row gap-4 flex-1">
+                        <div className="relative flex-1 sm:max-w-[180px]">
+                            <select
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                                className="appearance-none w-full border border-gray-300 pl-3 pr-8 py-2 text-sm focus:outline-none focus:border-black rounded bg-white cursor-pointer text-gray-700"
+                            >
+                                <option value="all">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="expired">Expired</option>
+                                <option value="pending">Pending</option>
+                                <option value="failed">Failed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                            <Filter size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                        </div>
+
+                        <div className="flex items-center gap-2 flex-1">
+                            <div className="flex items-center bg-white border border-gray-300 rounded overflow-hidden flex-1">
+                                <span className="px-2 py-2 text-[10px] font-bold text-gray-400 bg-gray-50 border-r border-gray-300 uppercase">From</span>
+                                <input
+                                    type="date"
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    className="px-2 py-2 text-xs focus:outline-none w-full text-gray-700"
+                                />
+                            </div>
+                            <span className="text-gray-300 text-xs font-bold">/</span>
+                            <div className="flex items-center bg-white border border-gray-300 rounded overflow-hidden flex-1">
+                                <span className="px-2 py-2 text-[10px] font-bold text-gray-400 bg-gray-50 border-r border-gray-300 uppercase">To</span>
+                                <input
+                                    type="date"
+                                    value={endDate}
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                    className="px-2 py-2 text-xs focus:outline-none w-full text-gray-700"
+                                />
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Date Range Selectors */}
-                    <div className="flex items-center gap-2">
-                        <div className="flex items-center bg-white border border-gray-300 rounded overflow-hidden">
-                            <span className="px-3 py-2 text-sm text-gray-500 bg-gray-50 border-r border-gray-300">From</span>
-                            <input
-                                type="date"
-                                value={startDate}
-                                onChange={(e) => setStartDate(e.target.value)}
-                                className="px-3 py-2 text-sm focus:outline-none focus:bg-gray-50 text-gray-700"
-                            />
-                        </div>
-                        <span className="text-gray-400 font-bold">-</span>
-                        <div className="flex items-center bg-white border border-gray-300 rounded overflow-hidden">
-                            <span className="px-3 py-2 text-sm text-gray-500 bg-gray-50 border-r border-gray-300">To</span>
-                            <input
-                                type="date"
-                                value={endDate}
-                                onChange={(e) => setEndDate(e.target.value)}
-                                className="px-3 py-2 text-sm focus:outline-none focus:bg-gray-50 text-gray-700"
-                            />
-                        </div>
-                    </div>
+                    <button 
+                        onClick={fetchSubscriptions}
+                        className="p-2 border border-gray-200 rounded hover:bg-gray-50 text-gray-500 hover:text-black hidden lg:block"
+                    >
+                        <RotateCcw size={18} className={isLoading ? 'animate-spin' : ''} />
+                    </button>
                 </div>
 
-                {/* Optional Clear Filters Button */}
                 {(searchQuery || statusFilter !== 'all' || startDate || endDate) && (
                     <button
                         onClick={() => {
@@ -239,99 +212,79 @@ export default function PaymentsPageContent() {
                             setStartDate('');
                             setEndDate('');
                         }}
-                        className="text-xs text-red-500 font-medium hover:underline ml-3"
+                        className="text-[10px] text-red-500 font-black uppercase tracking-wider hover:underline w-fit"
                     >
-                        Clear Filters
+                        Clear All Filters
                     </button>
                 )}
-
-                <div className="flex gap-4 text-gray-600">
-                    <RotateCcw
-                        size={20}
-                        className={`cursor-pointer hover:text-black ${isLoading ? 'animate-spin' : ''}`}
-                        onClick={fetchSubscriptions}
-                    />
-                    <Download
-                        size={20}
-                        className="cursor-pointer hover:text-black"
-                        onClick={handleExport}
-                        title="Export to Excel"
-                    />
-                </div>
             </div>
 
-            {/* Table Wrapper */}
-            <div className="bg-white border border-gray-300 flex flex-col h-[75vh] rounded-sm overflow-hidden">
-                {/* Table Header */}
-                <div className="border-b border-gray-300 bg-gray-100">
-                    <table className="w-full text-sm">
-                        <thead>
-                            <tr className="text-left font-semibold text-gray-700">
-                                <th className="px-4 py-3 w-[20%]">Driver / Contact</th>
-                                <th className="px-4 py-3 w-[15%]">Plan / Amount</th>
-                                <th className="px-4 py-3 w-[20%]">Transaction ID</th>
-                                <th className="px-4 py-3 w-[15%] text-center">Date</th>
-                                <th className="px-4 py-3 w-[15%] text-center">Status</th>
-                                <th className="px-4 py-3 w-[15%] text-right pr-6">Expiry</th>
+            {/* Table Container */}
+            <div className="flex-1 bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col shadow-sm" style={{ height: 'calc(100vh - 340px)', minHeight: '400px' }}>
+                <div className="overflow-x-auto overflow-y-auto custom-scrollbar flex-1">
+                    <table className="w-full text-sm min-w-[950px]">
+                        <thead className="bg-gray-50 border-b border-gray-200 text-left sticky top-0 z-10">
+                            <tr>
+                                <th className="px-5 py-3 font-semibold text-gray-600">Driver / Contact</th>
+                                <th className="px-5 py-3 font-semibold text-gray-600">Plan / Amount</th>
+                                <th className="px-5 py-3 font-semibold text-gray-600">Transaction Details</th>
+                                <th className="px-5 py-3 font-semibold text-gray-600 text-center">Date</th>
+                                <th className="px-5 py-3 font-semibold text-gray-600 text-center">Status</th>
+                                <th className="px-5 py-3 font-semibold text-gray-600 text-right pr-6">Expiry</th>
                             </tr>
                         </thead>
-                    </table>
-                </div>
-
-                {/* Scrollable Body */}
-                <div className="flex-1 overflow-y-auto relative min-h-[400px]">
-                    {isLoading ? (
-                        <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm z-10">
-                            <div className="flex flex-col items-center gap-3">
-                                <Loader2 size={40} className="animate-spin text-zinc-400" />
-                                <p className="text-zinc-400 font-bold uppercase tracking-widest text-[10px]">Fetching Transactions...</p>
-                            </div>
-                        </div>
-                    ) : error ? (
-                        <div className="h-full flex flex-col items-center justify-center p-8 gap-4">
-                            <XCircle size={40} className="text-red-400" />
-                            <p className="text-gray-500 font-medium">{error}</p>
-                            <button onClick={fetchSubscriptions} className="bg-black text-white px-4 py-2 text-xs rounded">Retry Fetch</button>
-                        </div>
-                    ) : subscriptions.length === 0 ? (
-                        <div className="h-full flex flex-col items-center justify-center p-8">
-                            <p className="text-gray-400 font-medium tracking-tight">No transactions found</p>
-                        </div>
-                    ) : (
-                        <table className="w-full text-sm">
-                            <tbody>
-                                {subscriptions.map((sub, index) => (
-                                    <tr
-                                        key={sub._id}
-                                        className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
-                                    >
-                                        <td className="px-4 py-4 w-[20%]">
+                        <tbody className="divide-y divide-gray-100">
+                            {isLoading ? (
+                                <tr>
+                                    <td colSpan="6" className="py-20 text-center">
+                                        <div className="flex flex-col items-center gap-3">
+                                            <Loader2 size={36} className="animate-spin text-zinc-300" />
+                                            <p className="text-zinc-400 font-bold uppercase tracking-widest text-[10px]">Assembling Records...</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : error ? (
+                                <tr>
+                                    <td colSpan="6" className="py-20 text-center">
+                                        <div className="flex flex-col items-center gap-4">
+                                            <XCircle size={36} className="text-red-300" />
+                                            <p className="text-gray-500 font-medium">{error}</p>
+                                            <button onClick={fetchSubscriptions} className="bg-black text-white px-4 py-2 text-xs rounded font-bold uppercase">Retry</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : subscriptions.length === 0 ? (
+                                <tr>
+                                    <td colSpan="6" className="py-20 text-center">
+                                        <p className="text-gray-400 font-medium">No transactions found</p>
+                                    </td>
+                                </tr>
+                            ) : (
+                                subscriptions.map((sub) => (
+                                    <tr key={sub._id} className="hover:bg-gray-50/50 transition-colors">
+                                        <td className="px-5 py-4">
                                             <div className="flex flex-col">
-                                                <span className="font-semibold text-zinc-900">
+                                                <span className="font-bold text-zinc-900 text-sm">
                                                     {sub.driverId?.personalInformation?.fullName || 'Unknown Driver'}
                                                 </span>
-                                                <span className="text-[11px] text-zinc-400 font-medium">{sub.driverId?.phone || 'N/A'}</span>
+                                                <span className="text-[10px] text-zinc-400 font-mono tracking-tight">{sub.driverId?.phone || 'N/A'}</span>
                                             </div>
                                         </td>
-                                        <td className="px-4 py-4 w-[15%]">
+                                        <td className="px-5 py-4">
                                             <div className="flex flex-col">
-                                                <span className="font-bold text-zinc-700 capitalize">{sub.plan} Plan</span>
+                                                <span className="font-bold text-zinc-700 capitalize text-xs">{sub.plan} Plan</span>
                                                 <span className="text-emerald-600 font-black text-xs">₹ {sub.totalAmount?.toLocaleString()}</span>
                                             </div>
                                         </td>
-                                        <td className="px-4 py-4 w-[20%]">
-                                            <div className="flex flex-col">
-                                                <span className="text-[10px] font-mono text-zinc-500 truncate" title={sub.razorpayPaymentId}>
-                                                    P: {sub.razorpayPaymentId || 'N/A'}
-                                                </span>
-                                                <span className="text-[10px] font-mono text-zinc-400 truncate mt-1" title={sub.razorpayOrderId}>
-                                                    O: {sub.razorpayOrderId || 'N/A'}
-                                                </span>
+                                        <td className="px-5 py-4">
+                                            <div className="flex flex-col max-w-[200px]">
+                                                <span className="text-[9px] font-mono text-zinc-400 truncate uppercase">PID: {sub.razorpayPaymentId || 'N/A'}</span>
+                                                <span className="text-[9px] font-mono text-zinc-400 truncate uppercase mt-1">OID: {sub.razorpayOrderId || 'N/A'}</span>
                                             </div>
                                         </td>
-                                        <td className="px-4 py-4 w-[15%] text-center">
+                                        <td className="px-5 py-4 text-center">
                                             <div className="flex flex-col items-center">
-                                                <span className="font-medium text-zinc-700">
+                                                <span className="font-bold text-zinc-700 text-xs">
                                                     {sub.paymentDate ? new Date(sub.paymentDate).toLocaleDateString() : new Date(sub.createdAt).toLocaleDateString()}
                                                 </span>
                                                 <span className="text-[10px] text-zinc-400">
@@ -339,75 +292,50 @@ export default function PaymentsPageContent() {
                                                 </span>
                                             </div>
                                         </td>
-                                        <td className="px-4 py-4 w-[15%] text-center">
+                                        <td className="px-5 py-4 text-center">
                                             <div className="flex flex-col items-center gap-1">
                                                 {getStatusBadge(sub.status)}
                                                 {sub.status === 'pending' && (
                                                     <button
                                                         onClick={() => handleSync(sub._id)}
                                                         disabled={isSyncing === sub._id}
-                                                        className="flex items-center gap-1 text-[9px] font-bold text-zinc-500 hover:text-black mt-1 transition-colors disabled:opacity-50"
-                                                        title="Sync with Razorpay"
+                                                        className="flex items-center gap-1 text-[9px] font-black text-zinc-500 hover:text-black uppercase tracking-tighter mt-1 transition-colors"
                                                     >
-                                                        {isSyncing === sub._id ? (
-                                                            <Loader2 size={10} className="animate-spin" />
-                                                        ) : (
-                                                            <RotateCcw size={10} />
-                                                        )}
-                                                        Manual Sync
+                                                        {isSyncing === sub._id ? <Loader2 size={10} className="animate-spin" /> : <RotateCcw size={10} />}
+                                                        Sync
                                                     </button>
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="px-4 py-4 w-[15%] text-right pr-6">
+                                        <td className="px-5 py-4 text-right pr-6">
                                             <div className="flex flex-col items-end">
-                                                <span className={`font-bold ${sub.status === 'active' ? 'text-green-600' : 'text-gray-400'}`}>
+                                                <span className={`font-bold text-xs ${sub.status === 'active' ? 'text-zinc-900' : 'text-zinc-300'}`}>
                                                     {sub.endDate ? new Date(sub.endDate).toLocaleDateString() : '--'}
-                                                </span>
-                                                <span className="text-[10px] text-zinc-400">
-                                                    {sub.endDate ? new Date(sub.endDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                                                 </span>
                                                 {sub.status === 'active' && sub.endDate && (() => {
                                                     const now = new Date();
                                                     const end = new Date(sub.endDate);
-                                                    const isPast = end < now;
-                                                    const diffMs = end - now;
-                                                    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-                                                    
-                                                    if (isPast) {
-                                                        return (
-                                                            <span className="text-[10px] font-bold mt-1 text-red-600 bg-red-50 px-1 rounded border border-red-100">
-                                                                Expired
-                                                            </span>
-                                                        );
-                                                    }
-
-                                                    if (diffDays <= 1) {
-                                                        return (
-                                                            <span className="text-[10px] font-bold mt-1 text-red-500 animate-pulse">
-                                                                Expiring Soon
-                                                            </span>
-                                                        );
-                                                    }
-
+                                                    const daysLeft = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
+                                                    if (daysLeft < 0) return <span className="text-[9px] font-black mt-1 text-red-500 uppercase">Expired</span>;
                                                     return (
-                                                        <span className="text-[10px] font-bold mt-1 text-orange-500">
-                                                            {diffDays} days left
+                                                        <span className={`text-[9px] font-black mt-1 uppercase ${daysLeft <= 1 ? 'text-red-500 animate-pulse' : 'text-orange-500'}`}>
+                                                            {daysLeft}D Left
                                                         </span>
                                                     );
                                                 })()}
                                             </div>
                                         </td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
 
-                {/* Fixed Footer */}
-                <div className="flex justify-between items-center p-4 text-sm bg-gray-50 border-t border-gray-300">
-                    <p className="text-gray-500 font-medium">Showing {subscriptions.length} Transactions</p>
+                {/* Footer Metrics */}
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-3 p-4 bg-gray-50 border-t border-gray-200">
+                    <p className="text-zinc-400 font-bold uppercase text-[10px] tracking-widest">Records: {subscriptions.length}</p>
+                    <p className="text-zinc-300 font-bold uppercase text-[9px] tracking-[0.2em]">Live Transaction Ledger</p>
                 </div>
             </div>
         </div>

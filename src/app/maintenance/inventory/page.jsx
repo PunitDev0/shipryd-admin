@@ -1,28 +1,15 @@
+import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import InventoryManagement from '@/components/maintenance/inventory-management'
-import { TopBar } from '@/components/layout/header'
-import { Sidebar } from '@/components/layout/sidebar'
 import React from 'react'
 
 export const metadata = {
-    title: 'Inventory | Maxrd Admin',
+    title: 'Inventory | ShipRyd Admin',
 }
 
-function InventoryPage() {
+export default function InventoryPage() {
     return (
-        <div className="flex h-screen bg-white">
-            <Sidebar />
-            <div className="flex-1 flex flex-col overflow-hidden">
-                <TopBar />
-
-                {/* Main Content */}
-                <main className="flex-1 overflow-y-auto bg-white custom-scrollbar">
-                    <div className="p-4">
-                        <InventoryManagement />
-                    </div>
-                </main>
-            </div>
-        </div>
+        <DashboardLayout>
+            <InventoryManagement />
+        </DashboardLayout>
     )
 }
-
-export default InventoryPage

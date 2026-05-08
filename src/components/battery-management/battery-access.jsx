@@ -114,23 +114,23 @@ export default function BatteryAccessManagement() {
     );
 
     return (
-        <div className="min-h-screen p-2">
+        <div className="flex flex-col h-full bg-white">
             {/* Header */}
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <div>
-                    <h1 className="text-3xl font-semibold flex items-center gap-3">
-                        <Zap className="text-yellow-500 fill-yellow-500" size={28} />
-                        Swap Access Control
+                    <h1 className="text-2xl md:text-3xl font-semibold flex items-center gap-3">
+                        <Zap className="text-yellow-500 fill-yellow-500" size={24} />
+                        Swap Access
                     </h1>
                     <p className="text-gray-500 text-sm">
-                        Manage battery swap permissions and subscription compliance
+                        Manage battery swap permissions
                     </p>
                 </div>
             </div>
 
             {/* Search & Actions */}
-            <div className="flex justify-between items-center mb-4">
-                <div className="relative w-72">
+            <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 mb-4">
+                <div className="relative flex-1 md:max-w-sm">
                     <Search
                         size={16}
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
@@ -140,71 +140,77 @@ export default function BatteryAccessManagement() {
                         placeholder="Search ID, Driver or Vehicle..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full border border-gray-300 pl-9 pr-3 py-2 text-sm focus:outline-none"
+                        className="w-full border border-gray-300 pl-9 pr-3 py-2 text-sm focus:outline-none focus:border-black rounded transition-colors"
                     />
                 </div>
 
-                <div className="flex gap-4 text-gray-600 items-center">
-                    <RotateCcw size={20} className="cursor-pointer hover:text-black" onClick={fetchVehicles} />
+                <div className="flex justify-end items-center gap-4 text-gray-600">
+                    <button 
+                        onClick={fetchVehicles}
+                        className="p-2 hover:bg-gray-100 rounded transition-colors"
+                        title="Refresh"
+                    >
+                        <RotateCcw size={20} className={isLoading ? 'animate-spin' : ''} />
+                    </button>
                 </div>
             </div>
 
-
-            <div className="bg-white border border-gray-300 flex flex-col h-[75vh]">
-                {/* Table Header */}
-                <div className="border-b border-gray-300 bg-gray-100">
-                    <table className="w-full text-sm">
-                        <thead>
-                            <tr className="text-left">
-                                <th className="px-4 py-3 w-[18%]">Vehicle Unit</th>
-                                <th className="px-4 py-3 w-[22%]">Current Pilot</th>
-                                <th className="px-4 py-3 w-[20%] text-center">Plan Integrity</th>
-                                <th className="px-4 py-3 w-[20%] text-center">Swap Permission</th>
-                                <th className="px-4 py-3 w-[20%] text-right pr-10">Command Override</th>
+            {/* Table Container */}
+            <div className="flex-1 bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col shadow-sm" style={{ height: 'calc(100vh - 280px)', minHeight: '400px' }}>
+                <div className="overflow-x-auto overflow-y-auto custom-scrollbar flex-1">
+                    <table className="w-full text-sm min-w-[850px]">
+                        <thead className="bg-gray-50 border-b border-gray-200 text-left sticky top-0 z-10">
+                            <tr>
+                                <th className="px-5 py-3 font-semibold text-gray-600">Vehicle Unit</th>
+                                <th className="px-5 py-3 font-semibold text-gray-600">Current Pilot</th>
+                                <th className="px-5 py-3 font-semibold text-gray-600 text-center">Plan Integrity</th>
+                                <th className="px-5 py-3 font-semibold text-gray-600 text-center">Swap Permission</th>
+                                <th className="px-5 py-3 font-semibold text-gray-600 text-right pr-6">Command</th>
                             </tr>
                         </thead>
-                    </table>
-                </div>
-
-                <div className="flex-1 overflow-y-auto min-h-[400px]">
-                    {isLoading ? (
-                        <div className="flex flex-col items-center justify-center h-full py-20 gap-4">
-                            <Loader2 size={40} className="animate-spin text-zinc-400" />
-                            <p className="text-zinc-400 font-bold uppercase tracking-widest text-xs">Synchronizing Access Matrix...</p>
-                        </div>
-                    ) : filteredVehicles.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center h-full py-20 gap-2">
-                            <p className="text-gray-400 font-medium">No matching data found</p>
-                        </div>
-                    ) : (
-                        <table className="w-full text-sm border-collapse">
-                            <tbody>
-                                {filteredVehicles.map((vehicle) => (
-                                    <tr key={vehicle._id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                                        <td className="px-4 py-4 w-[18%]">
+                        <tbody className="divide-y divide-gray-100">
+                            {isLoading ? (
+                                <tr>
+                                    <td colSpan="5" className="py-20 text-center">
+                                        <div className="flex flex-col items-center gap-3">
+                                            <Loader2 size={36} className="animate-spin text-zinc-300" />
+                                            <p className="text-zinc-400 font-bold uppercase tracking-widest text-[10px]">Synchronizing Access Matrix...</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : filteredVehicles.length === 0 ? (
+                                <tr>
+                                    <td colSpan="5" className="py-20 text-center">
+                                        <p className="text-gray-400 font-medium">No matching data found</p>
+                                    </td>
+                                </tr>
+                            ) : (
+                                filteredVehicles.map((vehicle) => (
+                                    <tr key={vehicle._id} className="hover:bg-gray-50/50 transition-colors">
+                                        <td className="px-5 py-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 bg-zinc-100 rounded-lg flex items-center justify-center">
+                                                <div className="w-8 h-8 bg-zinc-100 rounded-lg flex items-center justify-center flex-shrink-0">
                                                     <Battery size={16} className="text-zinc-900" />
                                                 </div>
-                                                <div>
-                                                    <div className="font-bold text-zinc-900">{vehicle.vehicleId}</div>
-                                                    <div className="text-[10px] text-zinc-400 font-mono uppercase">{vehicle.chassisNo}</div>
+                                                <div className="min-w-0">
+                                                    <div className="font-bold text-zinc-900 truncate">{vehicle.vehicleId}</div>
+                                                    <div className="text-[10px] text-zinc-400 font-mono uppercase truncate">{vehicle.chassisNo}</div>
                                                 </div>
                                             </div>
                                         </td>
 
-                                        <td className="px-4 py-4 w-[22%]">
+                                        <td className="px-5 py-4">
                                             {vehicle.currentDriverId ? (
-                                                <div>
-                                                    <div className="font-bold text-zinc-900 uppercase">{vehicle.driverName}</div>
+                                                <div className="min-w-0">
+                                                    <div className="font-bold text-zinc-900 uppercase truncate text-xs md:text-sm">{vehicle.driverName}</div>
                                                     <div className="text-[10px] text-zinc-500 font-mono tracking-wider">ID: {vehicle.currentDriverId}</div>
                                                 </div>
                                             ) : (
-                                                <div className="text-zinc-300 italic">No active assignment</div>
+                                                <div className="text-zinc-300 italic text-xs">No assignment</div>
                                             )}
                                         </td>
 
-                                        <td className="px-4 py-4 w-[20%] text-center">
+                                        <td className="px-5 py-4 text-center">
                                             {vehicle.currentDriverId ? (
                                                 vehicle.activeSubscription ? (() => {
                                                     const end = new Date(vehicle.activeSubscription.endDate);
@@ -214,15 +220,15 @@ export default function BatteryAccessManagement() {
                                                     return (
                                                         <div className="inline-flex flex-col items-center">
                                                             <div className="flex items-center gap-1 text-emerald-600 font-bold text-[10px] uppercase">
-                                                                <CheckCircle2 size={12} /> Active Plan
+                                                                <CheckCircle2 size={12} /> Active
                                                             </div>
                                                             <div className="flex items-center gap-2 mt-1">
-                                                                <span className="text-[10px] font-mono font-bold text-zinc-600 bg-zinc-100 px-1.5 py-0.5 rounded border border-zinc-200">
-                                                                    {end.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                                                <span className="text-[9px] font-mono font-bold text-zinc-600 bg-zinc-50 px-1.5 py-0.5 rounded border border-zinc-100">
+                                                                    {end.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
                                                                 </span>
-                                                                <span className={`text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm ${daysLeft <= 1 ? 'bg-red-500 text-white animate-pulse' :
-                                                                        daysLeft <= 3 ? 'bg-orange-400 text-white' :
-                                                                            'bg-emerald-500 text-white'
+                                                                <span className={`text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm text-white ${daysLeft <= 1 ? 'bg-red-500 animate-pulse' :
+                                                                        daysLeft <= 3 ? 'bg-orange-400' :
+                                                                            'bg-emerald-500'
                                                                     }`}>
                                                                     {daysLeft}D
                                                                 </span>
@@ -232,27 +238,27 @@ export default function BatteryAccessManagement() {
                                                 })() : (
                                                     <div className="inline-flex flex-col items-center">
                                                         <div className="flex items-center gap-1 text-red-500 font-bold text-[10px] uppercase animate-pulse">
-                                                            <XCircle size={12} /> No Active Plan
+                                                            <XCircle size={12} /> No Plan
                                                         </div>
-                                                        <span className="text-[8px] font-black text-red-400 mt-1">SWAPPING BLOCKED</span>
+                                                        <span className="text-[8px] font-black text-red-400 mt-1 uppercase">Blocked</span>
                                                     </div>
                                                 )
                                             ) : "--"}
                                         </td>
 
-                                        <td className="px-4 py-4 w-[20%] text-center">
+                                        <td className="px-5 py-4 text-center">
                                             {vehicle.currentDriverId ? (
-                                                <span className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full flex items-center justify-center gap-1.5 w-fit mx-auto ${vehicle.swapStatus === 'unblocked'
-                                                    ? 'bg-emerald-100 text-emerald-700'
-                                                    : 'bg-red-100 text-red-700'
+                                                <span className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-full flex items-center justify-center gap-1.5 w-fit mx-auto border ${vehicle.swapStatus === 'unblocked'
+                                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                                                    : 'bg-red-50 text-red-700 border-red-100'
                                                     }`}>
                                                     {vehicle.swapStatus === 'unblocked' ? <ShieldCheck size={12} /> : <ShieldAlert size={12} />}
-                                                    {vehicle.swapStatus === 'unblocked' ? "Authorized" : "Blocked"}
+                                                    {vehicle.swapStatus === 'unblocked' ? "Auth" : "Blocked"}
                                                 </span>
                                             ) : "--"}
                                         </td>
 
-                                        <td className="px-4 py-4 w-[20%] text-right pr-10">
+                                        <td className="px-5 py-4 text-right pr-6">
                                             {vehicle.currentDriverId ? (
                                                 <div className="flex justify-end">
                                                     <button
@@ -283,20 +289,20 @@ export default function BatteryAccessManagement() {
                                             ) : "--"}
                                         </td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
 
                 {/* Footer Metrics */}
-                <div className="flex justify-between items-center p-4 text-sm bg-gray-50 border-t border-gray-300">
-                    <div className="flex gap-6">
-                        <span className="font-bold text-zinc-400 uppercase text-[10px]">Total: {vehicles.length}</span>
-                        <span className="font-bold text-emerald-500 uppercase text-[10px]">Authorized: {vehicles.filter(v => v.swapStatus === 'unblocked').length}</span>
-                        <span className="font-bold text-red-500 uppercase text-[10px]">Blocked: {vehicles.filter(v => v.swapStatus === 'blocked').length}</span>
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-3 p-4 bg-gray-50 border-t border-gray-200">
+                    <div className="flex flex-wrap justify-center sm:justify-start gap-4">
+                        <span className="font-bold text-zinc-400 uppercase text-[9px] tracking-wider">Total: {vehicles.length}</span>
+                        <span className="font-bold text-emerald-500 uppercase text-[9px] tracking-wider">Authorized: {vehicles.filter(v => v.swapStatus === 'unblocked').length}</span>
+                        <span className="font-bold text-red-500 uppercase text-[9px] tracking-wider">Blocked: {vehicles.filter(v => v.swapStatus === 'blocked').length}</span>
                     </div>
-                    <p className="font-bold text-zinc-400 text-[10px]">Last Handshake: {new Date().toLocaleTimeString()}</p>
+                    <p className="font-bold text-zinc-300 text-[9px] uppercase tracking-widest">Live Syncing Active</p>
                 </div>
             </div>
         </div>

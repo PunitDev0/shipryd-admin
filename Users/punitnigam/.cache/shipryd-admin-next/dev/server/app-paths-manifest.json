@@ -1,0 +1,16 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin-users/page": "app/admin-users/page.js",
+  "/battery-access/page": "app/battery-access/page.js",
+  "/battery-swaps/page": "app/battery-swaps/page.js",
+  "/drivers/page": "app/drivers/page.js",
+  "/help-center/page": "app/help-center/page.js",
+  "/hubs/page": "app/hubs/page.js",
+  "/live-tracking/page": "app/live-tracking/page.js",
+  "/maintenance/inventory/page": "app/maintenance/inventory/page.js",
+  "/page": "app/page.js",
+  "/payments/page": "app/payments/page.js",
+  "/vehicle-lifecycle/page": "app/vehicle-lifecycle/page.js",
+  "/vehicle-return-approval/page": "app/vehicle-return-approval/page.js",
+  "/vehicles/page": "app/vehicles/page.js"
+}

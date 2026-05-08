@@ -8,9 +8,7 @@ import {
     LayoutGrid,
     Loader2,
     Download,
-    History,
     MapPin,
-    BatteryCharging
 } from 'lucide-react'
 import { apiProxy } from '@/lib/proxy'
 import { exportToExcel } from '@/lib/exportUtils'
@@ -73,62 +71,64 @@ export default function BatterySwaps() {
     return (
         <div className="flex flex-col h-full bg-white">
             {/* Toolbar */}
-            <div className="flex justify-between items-center mb-6">
-                <div className="flex gap-4 items-center flex-1">
-                    <div className="relative w-80">
+            <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-4 mb-6">
+                <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center flex-1">
+                    <div className="relative flex-1 sm:max-w-xs">
                         <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
-                            placeholder="Search Driver Name, ID or Vehicle..."
+                            placeholder="Search Driver Name, ID..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full border border-gray-300 pl-9 pr-3 py-2 text-sm focus:outline-none focus:border-black transition-colors"
+                            className="w-full border border-gray-300 pl-9 pr-3 py-2 text-sm focus:outline-none focus:border-black transition-colors rounded"
                         />
                     </div>
 
-                    <div className="flex items-center gap-2 bg-white border border-gray-300 px-3 py-1.5 rounded">
-                        <Calendar size={14} className="text-gray-400" />
+                    <div className="flex items-center gap-2 bg-white border border-gray-300 px-3 py-1.5 rounded overflow-hidden">
+                        <Calendar size={14} className="text-gray-400 flex-shrink-0" />
                         <input
                             type="date"
                             value={dateFilter.start}
                             onChange={(e) => setDateFilter(prev => ({ ...prev, start: e.target.value }))}
-                            className="text-xs focus:outline-none w-28 bg-transparent"
+                            className="text-[10px] sm:text-xs focus:outline-none w-full bg-transparent"
                         />
-                        <span className="text-gray-300">to</span>
+                        <span className="text-gray-300 text-xs">to</span>
                         <input
                             type="date"
                             value={dateFilter.end}
                             onChange={(e) => setDateFilter(prev => ({ ...prev, end: e.target.value }))}
-                            className="text-xs focus:outline-none w-28 bg-transparent"
+                            className="text-[10px] sm:text-xs focus:outline-none w-full bg-transparent"
                         />
                     </div>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex items-center justify-between sm:justify-end gap-3">
                     <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest bg-zinc-50 px-3 py-2 border border-zinc-200 rounded">
                         Swaps: {logs.length}
                     </div>
-                    <button
-                        onClick={fetchLogs}
-                        className="p-2 hover:bg-zinc-100 rounded transition-colors text-zinc-500 hover:text-black"
-                        title="Refresh"
-                    >
-                        <RotateCcw size={20} className={loading ? 'animate-spin' : ''} />
-                    </button>
-                    <button
-                        onClick={handleExport}
-                        className="p-2 hover:bg-zinc-100 rounded transition-colors text-zinc-500 hover:text-black"
-                        title="Export to Excel"
-                    >
-                        <Download size={20} />
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={fetchLogs}
+                            className="p-2 hover:bg-zinc-100 rounded transition-colors text-zinc-500 hover:text-black border border-transparent hover:border-zinc-200"
+                            title="Refresh"
+                        >
+                            <RotateCcw size={20} className={loading ? 'animate-spin' : ''} />
+                        </button>
+                        <button
+                            onClick={handleExport}
+                            className="p-2 hover:bg-zinc-100 rounded transition-colors text-zinc-500 hover:text-black border border-transparent hover:border-zinc-200"
+                            title="Export to Excel"
+                        >
+                            <Download size={20} />
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            {/* Table */}
-            <div className="flex-1 bg-white border border-gray-300 overflow-hidden flex flex-col rounded-sm">
-                <div className="overflow-x-auto custom-scrollbar">
-                    <table className="w-full text-sm">
+            {/* Table Container */}
+            <div className="flex-1 bg-white border border-gray-300 overflow-hidden flex flex-col rounded-sm shadow-sm" style={{ height: 'calc(100vh - 280px)', minHeight: '450px' }}>
+                <div className="overflow-x-auto overflow-y-auto custom-scrollbar flex-1">
+                    <table className="w-full text-sm min-w-[900px]">
                         <thead className="bg-gray-100 border-b border-gray-300 text-left sticky top-0 z-10">
                             <tr>
                                 <th className="px-5 py-3 font-semibold text-gray-700">Time & Date</th>
@@ -157,7 +157,7 @@ export default function BatterySwaps() {
                             ) : (
                                 logs.map((log, index) => (
                                     <tr key={log._id || index} className="hover:bg-zinc-50 transition-colors">
-                                        <td className="px-6 py-4">
+                                        <td className="px-5 py-4">
                                             <div className="flex flex-col">
                                                 <span className="font-bold text-zinc-900">
                                                     {new Date(log.dateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -167,7 +167,7 @@ export default function BatterySwaps() {
                                                 </span>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-5 py-4">
                                             <div className="flex flex-col">
                                                 <div className="flex items-center gap-2">
                                                     <span className="font-bold text-zinc-900">{log.driverName}</span>
@@ -178,7 +178,7 @@ export default function BatterySwaps() {
                                                 <span className="text-[10px] font-bold text-blue-600 uppercase tracking-tighter mt-1">Vehicle: {log.vehicleId || 'N/A'}</span>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-5 py-4">
                                             <div className="flex flex-col">
                                                 <div className="flex items-center gap-2 text-zinc-700">
                                                     <LayoutGrid size={14} className="text-emerald-500" />
@@ -190,7 +190,7 @@ export default function BatterySwaps() {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-5 py-4">
                                             <div className="flex flex-col gap-2">
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest min-w-[3.5rem]">Issued:</span>
@@ -210,7 +210,7 @@ export default function BatterySwaps() {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-center">
+                                        <td className="px-5 py-4 text-center">
                                             <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${log.driverStatus === 'active'
                                                 ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
                                                 : 'bg-red-100 text-red-700 border-red-200'

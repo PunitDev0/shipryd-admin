@@ -1,0 +1,98 @@
+[00:00:01.095] Server  LOG     ✓ Ready in 842ms
+[00:00:04.103] Server  LOG     ○ Compiling / ...
+[00:00:05.171] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:06.728] Browser ERROR   API Proxy Error: {}
+[00:00:06.728] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:00:06.728] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:00:06.728] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:00:06.728] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:00:06.728] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:00:06.728] Browser WARN    The width(-1) and height(-1) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+[00:00:06.728] Browser ERROR   API Proxy Error: {}
+[00:00:11.270] Browser ERROR   API Proxy Error: {}
+[00:00:11.270] Browser ERROR   Fetch error: {}
+[00:00:11.270] Browser ERROR   API Proxy Error: {}
+[00:00:11.270] Browser ERROR   Fetch error: {}
+[00:00:15.902] Browser ERROR   API Proxy Error: {}
+[00:00:15.902] Browser ERROR   {}
+[00:00:15.902] Browser ERROR   API Proxy Error: {}
+[00:00:15.902] Browser ERROR   {}
+[00:00:26.221] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:26.526] Browser ERROR   API Proxy Error: {}
+[00:00:26.526] Browser ERROR   {}
+[00:00:26.526] Browser ERROR   API Proxy Error: {}
+[00:00:26.526] Browser ERROR   {}
+[00:00:27.385] Browser ERROR   API Proxy Error: {}
+[00:00:27.385] Browser ERROR   Fetch error: {}
+[00:00:27.385] Browser ERROR   API Proxy Error: {}
+[00:00:27.385] Browser ERROR   Fetch error: {}
+[00:00:33.441] Browser ERROR   Error fetching vehicles: {}
+[00:00:33.441] Browser ERROR   Error fetching vehicles: {}
+[00:00:40.065] Browser ERROR   Error fetching hubs: {}
+[00:00:40.065] Browser ERROR   Error fetching hubs: {}
+[00:00:43.926] Browser ERROR   Error fetching return requests: {}
+[00:00:43.926] Browser ERROR   Error fetching return requests: {}
+[00:00:47.268] Browser ERROR   Error fetching hubs: {}
+[00:00:47.268] Browser ERROR   Error fetching hubs: {}
+[00:00:49.753] Browser ERROR   API Proxy Error: {}
+[00:00:49.753] Browser ERROR   {}
+[00:00:49.753] Browser ERROR   API Proxy Error: {}
+[00:00:49.753] Browser ERROR   {}
+[00:00:52.173] Browser ERROR   Error fetching hubs: {}
+[00:00:52.173] Browser ERROR   Error fetching hubs: {}
+[00:00:53.720] Browser ERROR   Error fetching vehicles: {}
+[00:00:53.720] Browser ERROR   Error fetching vehicles: {}
+[00:02:32.086] Server  LOG     ✓ Compiled in 3.8s
+[00:05:10.188] Browser ERROR   API Proxy Error: {}
+[00:05:10.188] Browser ERROR   Failed to fetch logs: {}
+[00:05:10.188] Browser ERROR   API Proxy Error: {}
+[00:05:10.188] Browser ERROR   Failed to fetch logs: {}
+[00:05:52.049] Server  LOG     ✓ Compiled in 3s
+[00:07:00.856] Browser ERROR   Error fetching vehicles: {}
+[00:07:00.856] Browser ERROR   Error fetching vehicles: {}
+[00:07:05.081] Browser ERROR   API Proxy Error: {}
+[00:07:05.081] Browser ERROR   Failed to fetch vehicle lifecycle report: {}
+[00:07:05.081] Browser ERROR   API Proxy Error: {}
+[00:07:05.081] Browser ERROR   Failed to fetch vehicle lifecycle report: {}
+[00:07:10.109] Browser ERROR   Fetch error: {}
+[00:07:10.109] Browser ERROR   Fetch error: {}
+[00:07:14.033] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:07:15.529] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:07:15.924] Browser ERROR   Fetch error: {}
+[00:07:15.924] Browser ERROR   Fetch error: {}
+[00:07:20.470] Browser ERROR   Fetch error: {}
+[00:07:20.470] Browser ERROR   Fetch error: {}
+[00:08:03.876] Server  LOG     ✓ Compiled in 2.6s
+[00:08:30.953] Server  LOG     ✓ Compiled in 455ms
+[00:08:59.717] Server  LOG     ✓ Compiled in 937ms
+[00:09:00.359] Browser ERROR   Fetch error: {}
+[00:10:42.004] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:10:43.707] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:10:44.084] Browser ERROR   Fetch error: {}
+[00:10:44.084] Browser ERROR   Fetch error: {}
+[00:10:47.087] Browser ERROR   API Proxy Error: {}
+[00:10:47.087] Browser ERROR   Error fetching admins: {}
+[00:10:47.087] Browser ERROR   API Proxy Error: {}
+[00:10:47.087] Browser ERROR   Error fetching admins: {}
+[00:10:55.303] Browser ERROR   API Proxy Error: {}
+[00:10:55.303] Browser ERROR   Fetch error: {}
+[00:10:55.303] Browser ERROR   API Proxy Error: {}
+[00:10:55.303] Browser ERROR   Fetch error: {}

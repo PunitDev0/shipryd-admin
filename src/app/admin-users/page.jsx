@@ -1,9 +1,8 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Sidebar } from '@/components/layout/sidebar'
-import { TopBar } from '@/components/layout/header'
-import { Plus, Shield, UserPlus, Trash2, Edit2, CheckCircle, XCircle } from 'lucide-react'
+import { DashboardLayout } from '@/components/layout/DashboardLayout'
+import { Plus, UserPlus, Trash2, XCircle } from 'lucide-react'
 import { apiProxy } from '@/lib/proxy'
 
 const SIDEBAR_MODULES = [
@@ -118,93 +117,75 @@ export default function AdminUsersPage() {
     }
 
     return (
-        <div className="flex h-screen bg-gray-50">
-            <Sidebar />
-            <div className="flex-1 flex flex-col overflow-hidden">
-                <TopBar />
-                <main className="flex-1 overflow-y-auto p-6 bg-white custom-scrollbar">
-                    <div className="max-w-7xl mx-auto">
-                        <div className="flex justify-between items-center mb-8">
-                            <div>
-                                <h1 className="text-2xl font-bold text-gray-900">Admin User Management</h1>
-                                <p className="text-gray-500 mt-1">Manage administrators and their module access.</p>
-                            </div>
-                            <button
-                                onClick={() => setShowAddModal(true)}
-                                className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-4 rounded-lg flex items-center gap-2 transition-all shadow-sm"
-                            >
-                                <UserPlus size={18} />
-                                Add New Admin
-                            </button>
-                        </div>
-
-                        {isLoading ? (
-                            <div className="text-center py-20">
-                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto"></div>
-                                <p className="mt-4 text-gray-500">Loading administrators...</p>
-                            </div>
-                        ) : (
-                            <div className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
-                                <table className="w-full text-left">
-                                    <thead className="bg-gray-50 border-b border-gray-100">
-                                        <tr>
-                                            <th className="px-6 py-4 text-sm font-semibold text-gray-700">Admin Details</th>
-                                            <th className="px-6 py-4 text-sm font-semibold text-gray-700">Role</th>
-                                            <th className="px-6 py-4 text-sm font-semibold text-gray-700">Permissions</th>
-                                            <th className="px-6 py-4 text-sm font-semibold text-gray-700 text-right">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-50">
-                                        {admins.map((admin) => (
-                                            <tr key={admin._id} className="hover:bg-gray-50/50 transition-colors">
-                                                <td className="px-6 py-5">
-                                                    <div>
-                                                        <p className="font-semibold text-gray-900">{admin.fullName}</p>
-                                                        <p className="text-sm text-gray-500">{admin.email}</p>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-5">
-                                                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${admin.role === 'super-admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
-                                                        {admin.role}
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-5">
-                                                    <div className="grid grid-cols-3 gap-2 min-w-[300px]">
-                                                        {SIDEBAR_MODULES.map((mod) => (
-                                                            <div key={mod.id} className="flex items-center gap-2">
-                                                                <label className="relative inline-flex items-center cursor-pointer scale-75 origin-left">
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        className="sr-only peer"
-                                                                        checked={admin.permissions?.[mod.id] || false}
-                                                                        onChange={() => handleTogglePermission(admin._id, mod.id)}
-                                                                    />
-                                                                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-yellow-400"></div>
-                                                                </label>
-                                                                <span className="text-[11px] text-gray-600 truncate">{mod.label}</span>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-5 text-right">
-                                                    <div className="flex justify-end gap-3">
-                                                        <button
-                                                            onClick={() => handleDeleteAdmin(admin._id)}
-                                                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                                                            title="Delete Account"
-                                                        >
-                                                            <Trash2 size={18} />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )}
+        <DashboardLayout>
+            <div className="max-w-7xl mx-auto">
+                {/* Header */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900">Admin User Management</h1>
+                        <p className="text-gray-500 mt-1 text-sm">Manage administrators and their module access.</p>
                     </div>
-                </main>
+                    <button
+                        onClick={() => setShowAddModal(true)}
+                        className="w-full sm:w-auto bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm"
+                    >
+                        <UserPlus size={18} />
+                        Add New Admin
+                    </button>
+                </div>
+
+                {isLoading ? (
+                    <div className="text-center py-20">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto"></div>
+                        <p className="mt-4 text-gray-500">Loading administrators...</p>
+                    </div>
+                ) : (
+                    <div className="space-y-4">
+                        {admins.map((admin) => (
+                            <div key={admin._id} className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
+                                {/* Admin Header */}
+                                <div className="flex items-center justify-between p-4 border-b border-gray-50">
+                                    <div>
+                                        <p className="font-semibold text-gray-900">{admin.fullName}</p>
+                                        <p className="text-sm text-gray-500">{admin.email}</p>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${admin.role === 'super-admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
+                                            {admin.role}
+                                        </span>
+                                        <button
+                                            onClick={() => handleDeleteAdmin(admin._id)}
+                                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                            title="Delete Account"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
+                                </div>
+                                {/* Permissions Grid */}
+                                <div className="p-4">
+                                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Permissions</p>
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2">
+                                        {SIDEBAR_MODULES.map((mod) => (
+                                            <label key={mod.id} className="flex items-center gap-2 cursor-pointer group">
+                                                <div className="relative flex-shrink-0">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="sr-only peer"
+                                                        checked={admin.permissions?.[mod.id] || false}
+                                                        onChange={() => handleTogglePermission(admin._id, mod.id)}
+                                                    />
+                                                    <div className="w-8 h-4 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-yellow-400"></div>
+                                                </div>
+                                                <span className="text-[11px] text-gray-600 truncate">{mod.label}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Add Admin Modal */}
@@ -283,6 +264,6 @@ export default function AdminUsersPage() {
                     </div>
                 </div>
             )}
-        </div>
+        </DashboardLayout>
     )
 }

@@ -1,8 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { Sidebar } from '@/components/layout/sidebar'
-import { TopBar } from '@/components/layout/header'
+import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { apiProxy } from '@/lib/proxy'
 import { BASE_URL } from '@/lib/baseUrl'
 import { Navigation, Loader2, RefreshCcw, User, ChevronDown, Search, Check, X, MapPin } from 'lucide-react'
@@ -171,14 +170,11 @@ export default function LiveTrackingPage() {
     const mapReady = typeof window !== 'undefined' && L
 
     return (
-        <div className="flex h-screen bg-white">
-            <Sidebar />
-            <div className="flex-1 flex flex-col overflow-hidden">
-                <TopBar />
-                <main className="flex-1 relative overflow-hidden">
+        <DashboardLayout noPadding>
+            <div className="relative w-full h-full">
 
                     {/* Floating Dropdown */}
-                    <div className="absolute top-4 left-4 z-[1000] w-72">
+                    <div className="absolute top-4 left-4 z-[1000] w-64 sm:w-72">
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                             className="w-full bg-white border border-gray-100 shadow-xl rounded-2xl px-4 py-3.5 flex items-center justify-between hover:border-yellow-400 transition-all"
@@ -308,8 +304,7 @@ export default function LiveTrackingPage() {
                             </div>
                         )}
                     </div>
-                </main>
             </div>
-        </div>
+        </DashboardLayout>
     )
 }
