@@ -24,7 +24,9 @@ export function ZoneModal({ isOpen, onClose }) {
         try {
             const response = await fetch(`${BASE_URL}/api/zone`)
             const data = await response.json()
-            if (Array.isArray(data)) {
+            if (data.success && Array.isArray(data.data)) {
+                setZones(data.data)
+            } else if (Array.isArray(data)) {
                 setZones(data)
             } else if (data.success && Array.isArray(data.zones)) {
                 setZones(data.zones)

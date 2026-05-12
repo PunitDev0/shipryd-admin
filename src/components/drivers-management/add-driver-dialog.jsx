@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 
 import { BASE_URL } from '@/lib/baseUrl'
+import { apiProxy } from '@/lib/proxy'
 
 export function AddDriverDialog({ isOpen, onClose }) {
   const [currentStep, setCurrentStep] = useState(1)
@@ -54,14 +55,13 @@ export function AddDriverDialog({ isOpen, onClose }) {
   useEffect(() => {
     const fetchZones = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/api/zone`)
-        const data = await response.json()
+        const { data, ok } = await apiProxy('/api/zone')
         console.log('Fetched Zones:', data) // Debugging help
 
-        if (data.success && data.zones) {
-          setZones(data.zones)
-        } else if (data.data && Array.isArray(data.data)) {
+        if (ok && data.success && Array.isArray(data.data)) {
           setZones(data.data)
+        } else if (data.success && Array.isArray(data.zones)) {
+          setZones(data.zones)
         } else if (Array.isArray(data)) {
           setZones(data)
         } else {
@@ -166,17 +166,15 @@ export function AddDriverDialog({ isOpen, onClose }) {
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/api/driver/complete-profile`, {
+      const { data, ok } = await apiProxy('/api/driver/complete-profile', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
 
-      if (response.ok) {
+      if (ok) {
         alert('Driver onboarded successfully!')
         handleClose()
       } else {
-        const data = await response.json()
         alert('Submission failed: ' + (data.message || 'Check all fields'))
       }
     } catch (error) {
@@ -265,7 +263,7 @@ export function AddDriverDialog({ isOpen, onClose }) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Operational Zone</label>
+                <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Operational Zone / Time Zone</label>
                 <select name="zoneId" value={formData.zoneId} onChange={handleInputChange} className="w-full border border-gray-300 p-2.5 text-sm rounded focus:outline-none focus:border-black appearance-none bg-white font-medium cursor-pointer">
                   <option value="">Select Zone</option>
                   {zones.map(zone => (
